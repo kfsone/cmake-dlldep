@@ -5,7 +5,7 @@ on:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: ReWithDebInfo
+  BUILD_TYPE: RelWithDebInfo
 
 jobs:
   start:
@@ -15,7 +15,7 @@ jobs:
 
 
     - name: Configure DLL CMake
-      run: cmake -B ${{github.workspace}}/DLL/build ${{github.workspace}}/DLL
+      run: cmake -B ${{github.workspace}}/DLL/build ${{github.workspace}}/DLL -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build DLL
       run: cmake --build ${{github.workspace}}/DLL/build --config ${{env.BUILD_TYPE}}
@@ -25,7 +25,7 @@ jobs:
 
 
     - name: Configure Exe CMake
-      run: cmake -B ${{github.workspace}}/build ${{github.workspace}}
+      run: cmake -B ${{github.workspace}}/build ${{github.workspace}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build Exe
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

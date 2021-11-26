@@ -1,0 +1,44 @@
+name: CMake
+
+on:
+  push:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: ReWithDebInfo
+
+jobs:
+  start:
+    runs-on: windows
+    steps:
+    - uses: actions/checkout@v2
+
+  build-dll:
+    runs-on: windows
+    steps:
+    - name: Configure DLL CMake
+      run: cmake -B ${{github.workspace}}/DLL/build $${github.workspace}}/DLL
+
+    - name: Build DLL
+      run: cmake --build ${{github.workspace}}/DLL/build --config ${{env.BUILD_TYPE}}
+
+    - name: Install DLL
+      run: cmake --install ${{github.workspace}}/DLL/build --config ${{env.BUILD_TYPE}}
+      
+  build-exe:
+    runs-on: windows
+    steps:
+    - name: Configure Exe CMake
+      run: cmake -B ${{github.workspace}}/build $${github.workspace}}
+
+    - name: Build Exe
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Install Exe
+      run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+  validate:
+    runs-on: windows
+    steps:
+    - name: Validate product
+      run: ${{github.workspace}}/validate.ps1

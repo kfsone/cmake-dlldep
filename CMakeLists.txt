@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
 
 # Demonstration of modern CMake to introduce an out-of-tree/3rd party
 # shared object dependency into a project in such a way that CMake
@@ -26,6 +26,11 @@ ADD_LIBRARY(
 )
 
 IF (WIN32)
+	# Describe the path to the DLL itself, which the sub-project placed
+	# into a well-known location for us, and the path to the shared lib
+	# stub.
+	# It's unfortunate this still has to be so aggressively platform
+	# specific.
 	SET_TARGET_PROPERTIES(
 		ExternalDLL
 		PROPERTIES
@@ -35,6 +40,21 @@ IF (WIN32)
 ELSE ()
 	MESSAGE(FATAL_ERROR "Non-Windows demo not implemented, yet.")
 ENDIF()
+
+# Tell CMake it needs to install the imported artifact and where the
+# various pieces of it should go.
+# NOTE: Only tested on windows so far, don't know what this will do
+# with shared objects or dylibs, yet.
+INSTALL(
+	IMPORTED_RUNTIME_ARTIFACTS
+
+	ExternalDLL
+
+	RUNTIME DESTINATION   "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	LIBRARY DESTINATION   "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	FRAMEWORK DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	BUNDLE DESTINATION    "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+)
 
 
 # -------------------------------------------------------------------
@@ -65,8 +85,13 @@ TARGET_LINK_LIBRARIES(Program PUBLIC MiddleLib)
 # How install might look on a CI machine.
 INSTALL(
 	TARGETS Program
-	DESTINATION ${CMAKE_BINARY_DIR}/../Artifacts
+
+	# On Windows, DLL is considered Runtime, whereas on other OSes,
+	# the .so/.dylib/etc is considered a library.
+	RUNTIME DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	LIBRARY DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
 )
+
 
 # Build and install the entire project:
 #  cmake -B        ./DLL/build ./DLL      # specify -G if you must

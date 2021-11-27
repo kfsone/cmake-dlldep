@@ -16,20 +16,13 @@ ADD_LIBRARY(
 	dll.cpp
 )
 
+# To fully simulate being an out-of-tree product, we're going
+# to finish by installing to a "well known path" without our
+# directory, i.e. lib/
 INSTALL(
-	TARGETS		DLL
-	EXPORT      DLLDependency
-	LIBRARY	DESTINATION ${CMAKE_CURRENT_LIST_DIR}/lib
-	ARCHIVE	DESTINATION ${CMAKE_CURRENT_LIST_DIR}/lib
-	RUNTIME	DESTINATION ${CMAKE_CURRENT_LIST_DIR}/lib
+	TARGETS	  DLL
+	ARCHIVE   DESTINATION "${CMAKE_CURRENT_LIST_DIR}/lib"
+	LIBRARY   DESTINATION "${CMAKE_CURRENT_LIST_DIR}/lib"
+	RUNTIME   DESTINATION "${CMAKE_CURRENT_LIST_DIR}/lib"
+	FRAMEWORK DESTINATION "${CMAKE_CURRENT_LIST_DIR}/lib"
 )
-
-# If you wanted to create an includable .cmake so that the
-# dependency could be IMPORTed elsewhere:
-#
-# INSTALL(
-# 	EXPORT		DLLDependency
-# 	FILE		DLLDependency.cmake
-# 	NAMESPACE	DLLDependency::
-# 	DESTINATION ../lib
-# )

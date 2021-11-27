@@ -1,5 +1,5 @@
 #if defined(WIN32)
-# define IMPORT extern __declspec(dllexport)
+# define IMPORT extern __declspec(dllimport)
 #else
 # define IMPORT extern
 #endif

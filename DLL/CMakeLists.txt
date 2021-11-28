@@ -16,6 +16,19 @@ ADD_LIBRARY(
 	dll.cpp
 )
 
+# Let's also demonstrate how to deal with a variant that has
+# different names for different configs. You can't use generator
+# expressions for "IMPORTED_IMPLIB" and "IMPORTED_LOCATION" as
+# of 3.22, so instead you have to use the config-specific variables.
+SET_TARGET_PROPERTIES(
+	DLL PROPERTIES
+
+	OUTPUT_NAME_DEBUG "DLL_Debug"
+)
+
+# Debug version is called "DLL-Debug.{lib,dll}" and release is
+# called "DLL.{lib,dll}".
+
 # To fully simulate being an out-of-tree product, we're going
 # to finish by installing to a "well known path" without our
 # directory, i.e. lib/

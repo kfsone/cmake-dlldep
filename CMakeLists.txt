@@ -31,11 +31,16 @@ IF (WIN32)
 	# stub.
 	# It's unfortunate this still has to be so aggressively platform
 	# specific.
+	# We also added in the extra difficulty of the Debug build of the
+	# DLL and its library having a _Debug suffix.
 	SET_TARGET_PROPERTIES(
 		ExternalDLL
 		PROPERTIES
 			IMPORTED_LOCATION "${CMAKE_CURRENT_LIST_DIR}/DLL/lib/DLL.dll"
 			IMPORTED_IMPLIB   "${CMAKE_CURRENT_LIST_DIR}/DLL/lib/DLL.lib"
+
+			IMPORTED_LOCATION_DEBUG "${CMAKE_CURRENT_LIST_DIR}/DLL/lib/DLL_Debug.dll"
+			IMPORTED_IMPLIB_DEBUG   "${CMAKE_CURRENT_LIST_DIR}/DLL/lib/DLL_Debug.lib"
 	)
 ELSE ()
 	MESSAGE(FATAL_ERROR "Non-Windows demo not implemented, yet.")
@@ -50,10 +55,7 @@ INSTALL(
 
 	ExternalDLL
 
-	RUNTIME DESTINATION   "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
-	LIBRARY DESTINATION   "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
-	FRAMEWORK DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
-	BUNDLE DESTINATION    "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	DESTINATION   "${CMAKE_CURRENT_LIST_DIR}/Artifacts"
 )
 
 
@@ -88,8 +90,7 @@ INSTALL(
 
 	# On Windows, DLL is considered Runtime, whereas on other OSes,
 	# the .so/.dylib/etc is considered a library.
-	RUNTIME DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
-	LIBRARY DESTINATION "${CMAKE_CURRENT_LIST_DIR}/../Artifacts"
+	DESTINATION "${CMAKE_CURRENT_LIST_DIR}/Artifacts"
 )
 
 

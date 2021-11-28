@@ -1,4 +1,7 @@
 ## Checks that the build tree makes sense.
+Param(
+  [String] $Config="RelWithDebInfo"
+)
 
 # Stop on any failing command
 $ErrorActionPreference = "stop"
@@ -19,7 +22,11 @@ function Find-ProgramDll {
 
   echo "++ Found Program.exe in ${InPath}"
 
-  $expectDll = Join-Path $exes.directory "DLL.dll"
+  $dllName = "DLL"
+  if ($Config -eq "Debug") {
+    $dllName += "_Debug"
+  }
+  $expectDll = Join-Path $exes.directory "${dllName}.dll"
   if (! (Test-Path $expectDll)) {
     throw "DLL was NOT found in ${InPath} (expected $expectDll)"
   }
